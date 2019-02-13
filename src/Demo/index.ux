@@ -1,0 +1,115 @@
+<template>
+  <!-- template里只能有一个根节点 -->
+  <div class="demo-page">
+    <stack>
+      <textarea id="main-ta" @change="onChange" @swipe="onSwipe">
+      {{text}}
+      </textarea>
+      <div id="btn-containor" @click="onEvent">
+
+      </div>
+    </stack>
+  </div>
+</template>
+
+<style>
+  .demo-page {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #efefef;
+  }
+
+  stack {
+    width: 100%;
+    height: 100%;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  #btn-containor {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    border-radius: 30px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+  }
+</style>
+
+<script>
+  import router from '@system.router'
+  import storage from '@system.storage'
+  import kfmd from 'kfmd'
+
+  export default {
+    // 页面级组件的数据模型，影响传入数据的覆盖机制：private内定义的属性不允许被覆盖
+    private: {
+      title: '示例页面',
+      text: ''
+    },
+    routeDetail () {
+      console.info(kfmd.string2mdhtml)
+    },
+
+    onCreate() {
+    },
+
+    onReady() {
+        storage.get({
+          key: 'preview',
+          success: function (data) {
+            this.text = data
+            console.info(data)
+          }.bind(this)
+        })
+    },
+
+    onEvent (e) {
+      
+      storage.set({
+        key: 'preview',
+        value: this.text,
+        success: function (data) {
+          router.push({
+            uri: 'Detail'
+          })
+        }
+      })
+    },
+
+    onSwipe (e) {
+
+      console.info (e)
+      
+      storage.set({
+        key: 'preview',
+        value: this.text,
+        success: function (data) {
+          router.push({
+            uri: 'Detail'
+          })
+        }
+      })
+    },
+
+    onChange (e) {
+      switch (e.target.id) {
+        case 'main-ta':
+          this.text = e.text
+          this.text.split('').map(s => {
+            console.info(s + ' -> ' + s.charCodeAt())
+          })
+          console.info(this.text)
+          break
+        default:
+          console.info('aa')
+          break
+      }
+    } 
+  }
+</script>

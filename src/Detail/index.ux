@@ -1,0 +1,30 @@
+<template>
+    <richtext type="html">{{preview}}</richtext>
+</template>
+<style>
+    text {
+        font-size: 40px;
+        text-align: center;
+    }
+</style>
+<script>
+    import kfmd from 'kfmd'
+    import storage from '@system.storage'
+
+    export default {
+      private: {
+        preview: '' 
+      },
+      onReady() {
+        storage.get({
+          key: 'preview',
+          success: function (data) {
+            console.info(data)
+            this.preview = kfmd.string2mdhtml(data)
+            console.info(this.preview)
+          }.bind(this)
+        })
+      }
+    }
+
+</script>
